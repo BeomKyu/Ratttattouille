@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: local
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+token:
+  secret: ${TOKEN_SECRET:c2VjcmV0a2V5Zm9yZGV2ZW52aXJvbm1lbnRzZWNyZXRrZXlmb3JkZXZlbnZpcm9ubWVudA==}
+  validity:
+    USER_ACCESS: 3600000        # 1시간
+    USER_REFRESH: 604800000     # 7일
+    PROFILE_ACCESS: 3600000     # 1시간
+    PROFILE_REFRESH: 604800000  # 7일
+    NONCE: 300000              # 5분
+
+security:
+  token:
+    user-paths: #/users/**, /profiles/**
+    profile-paths: #/api/profiles/**
+    nonce-paths: /nonce-tokens/**
+
+logging:
+  level:
+    root: info
+    com.forrrest: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+
+server:
+  port: 8080
