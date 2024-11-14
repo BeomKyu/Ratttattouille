@@ -1,7 +1,10 @@
 package com.external.sample.utils;
 
+import java.util.List;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.forrrest.common.security.authentication.NonceTokenAuthentication;
 import com.forrrest.common.security.authentication.ProfileTokenAuthentication;
 import com.forrrest.common.security.userdetails.CustomUserDetails;
 
@@ -17,6 +20,24 @@ public class SecurityUtils {
         ProfileTokenAuthentication authentication = (ProfileTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         return userDetails.getUsername();
+    }
+
+    public static Long getCurrentNonceProfileId() {
+        NonceTokenAuthentication authentication = (NonceTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return Long.parseLong(userDetails.getId());
+    }
+
+    public static String getCurrentNonceProfileName() {
+        NonceTokenAuthentication authentication = (NonceTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getUsername();
+    }
+
+    public static List<String> getCurrentNonceProfileRole() {
+        NonceTokenAuthentication authentication = (NonceTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getRoles();
     }
 
     // public static void validateAppOwnership(App app) {

@@ -1,11 +1,9 @@
 package com.external.sample.security;
 
 import java.io.IOException;
-import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,11 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExternalNonceTokenFilter extends AbstractTokenFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExternalNonceTokenFilter.class);
     private final NonceTokenProvider nonceTokenProvider;
 
     protected ExternalNonceTokenFilter(@Qualifier("nonceTokenProvider")TokenProvider tokenProvider,
-        String[] pathPatterns) {
+        @Value("${security.token.nonce-paths}")String[] pathPatterns) {
         super(tokenProvider, pathPatterns);
         this.nonceTokenProvider = (NonceTokenProvider)tokenProvider;
     }
@@ -46,14 +43,13 @@ public class ExternalNonceTokenFilter extends AbstractTokenFilter {
         FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = resolveToken(request);
-            logger.info("resolveToken");
             if (StringUtils.hasText(token) &&
                 nonceTokenProvider.validateToken(token) &&
                 nonceTokenProvider.validateTokenType(token, getExpectedTokenType())) {
 
-                // Authentication auth = nonceTokenProvider.getAuthentication(token);
-                // SecurityContextHolder.getContext().setAuthentication(auth);
-                logger.info("do it auth token");
+                //Compare the user data in the token with the user data you have. To create new user data for the current user or retrieve existing user data.
+                Authentication auth = nonceTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
             filterChain.doFilter(request, response);
         } catch (TokenException e) {
@@ -63,20 +59,11 @@ public class ExternalNonceTokenFilter extends AbstractTokenFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        logger.info("resolveToken");
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            logger.info("resolveToken");
             return bearerToken.substring(7);
         }
-        logger.info("resolveToken");
         return null;
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return false;
     }
 
 }

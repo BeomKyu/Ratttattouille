@@ -4,8 +4,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -27,14 +25,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.impl.DefaultClaims;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 @Component("nonceTokenProvider")
 @Slf4j
 public class NonceTokenProvider implements TokenProvider {
-
-    private static final Logger logger = LoggerFactory.getLogger(NonceTokenProvider.class);
 
     @Override
     public String createToken(String subject, TokenType tokenType) {
@@ -48,7 +45,6 @@ public class NonceTokenProvider implements TokenProvider {
 
     @Override
     public boolean validateToken(String token) {
-        logger.info("Received request with Authorization header: {}", token);
         try {
             /*
             web request forrest-appmanagementservice /nonce-tokens/validate
@@ -67,48 +63,41 @@ public class NonceTokenProvider implements TokenProvider {
 
     @Override
     public boolean validateTokenType(String token, TokenType expectedType) {
-        return true;
-        // logger.info("validateTokenType: {}", token);
-        // Claims claims = getClaims(token);
-        // logger.info("validateTokenType: {}", claims);
-        // String tokenType = claims.get("tokenType", String.class);
+        Claims claims = getClaims(token);
+        String tokenType = claims.get("tokenType", String.class);
 
-        // if (tokenType == null) {
-        //     throw new TokenException(TokenExceptionType.WRONG_TYPE);
-        // }
-        //
-        // try {
-        //     TokenType actualType = TokenType.valueOf(tokenType);
-        //     return actualType == expectedType;
-        // } catch (IllegalArgumentException e) {
-        //     throw new TokenException(TokenExceptionType.WRONG_TYPE);
-        // }
+        if (tokenType == null) {
+            throw new TokenException(TokenExceptionType.WRONG_TYPE);
+        }
+
+        try {
+            TokenType actualType = TokenType.valueOf(tokenType);
+            return actualType == expectedType;
+        } catch (IllegalArgumentException e) {
+            throw new TokenException(TokenExceptionType.WRONG_TYPE);
+        }
     }
 
     @Override
     public Claims getClaims(String token) {
-        return null;
-        // try {
-        //     String[] parts = token.split("\\.");
-        //     if (parts.length < 2) {
-        //         throw new InvalidTokenException();
-        //     }
-        //     logger.info("getClaims parts: {}", (Object)parts);
-        //     // JWT의 페이로드 부분을 디코딩
-        //     String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
-        //     logger.info("getClaims payload: {}", payload);
-        //
-        //     // Jackson ObjectMapper를 사용하여 페이로드를 Map 객체로 변환
-        //     ObjectMapper mapper = new ObjectMapper();
-        //     Map<String, Object> claimsMap = mapper.readValue(payload, new TypeReference<Map<String, Object>>() {
-        //     });
-        //     logger.info("getClaims map: {}", claimsMap);
-        //
-        //     // Map을 Claims 객체로 변환
-        //     return new DefaultClaims(claimsMap);
-        // } catch (Exception e) {
-        //     throw new InvalidTokenException();
-        // }
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length < 2) {
+                throw new InvalidTokenException();
+            }
+            // JWT의 페이로드 부분을 디코딩
+            String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
+
+            // Jackson ObjectMapper를 사용하여 페이로드를 Map 객체로 변환
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> claimsMap = mapper.readValue(payload, new TypeReference<Map<String, Object>>() {
+            });
+
+            // Map을 Claims 객체로 변환
+            return new DefaultClaims(claimsMap);
+        } catch (Exception e) {
+            throw new InvalidTokenException();
+        }
     }
 
     @Override
@@ -143,4 +132,5 @@ public class NonceTokenProvider implements TokenProvider {
             throw new TokenException(TokenExceptionType.WRONG_TYPE);
         }
     }
+
 }

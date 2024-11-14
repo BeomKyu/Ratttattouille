@@ -29,8 +29,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers("/nonce-tokens/**").permitAll()
-                // .anyRequest().denyAll()
+                .requestMatchers("/nonce-tokens/**").hasRole("PROFILE")
+                .anyRequest().denyAll()
             )
             .addFilterBefore(externalNonceTokenFilter, UsernamePasswordAuthenticationFilter.class);
         
