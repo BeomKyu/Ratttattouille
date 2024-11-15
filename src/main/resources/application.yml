@@ -26,8 +26,8 @@ token:
 
 security:
   token:
-    user-paths: #/users/**, /profiles/**
-    profile-paths: #/api/profiles/**
+    user-paths: #/users, /profiles
+    profile-paths: #/api/profiles
     nonce-paths: /nonce-tokens
 
 logging:
@@ -38,4 +38,9 @@ logging:
     org.hibernate.type: trace
 
 server:
-  port: 8080
+  port: ${SAMPLE_PORT:8080}
+
+forrrest:
+  app-management-service:
+    host: ${APP_MANAGEMENT_SERVICE_HOST:localhost}
+    port: ${APP_MANAGEMENT_SERVICE_PORT:8081}

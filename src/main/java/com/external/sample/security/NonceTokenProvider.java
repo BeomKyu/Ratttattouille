@@ -4,6 +4,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component("nonceTokenProvider")
 @Slf4j
 public class NonceTokenProvider implements TokenProvider {
+
+    private final Logger logger = LoggerFactory.getLogger(NonceTokenProvider.class);
 
     @Override
     public String createToken(String subject, TokenType tokenType) {
@@ -92,6 +96,7 @@ public class NonceTokenProvider implements TokenProvider {
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> claimsMap = mapper.readValue(payload, new TypeReference<Map<String, Object>>() {
             });
+            log.info("claimsMap : {}", claimsMap);
 
             // Map을 Claims 객체로 변환
             return new DefaultClaims(claimsMap);
