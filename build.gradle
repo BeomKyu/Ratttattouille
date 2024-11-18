@@ -33,7 +33,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 	// JWT custom
-	implementation 'com.github.BeomKyu:forrrest-common:stag0.0.4'
+	implementation 'com.github.BeomKyu:forrrest-common:stag0.0.5'
 
 	//	JWT	//
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
@@ -44,6 +44,9 @@ dependencies {
 	// Lombok (Optional)
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//	Web Client	//
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	// Testing Dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
