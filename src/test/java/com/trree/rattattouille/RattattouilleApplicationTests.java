@@ -1,4 +1,4 @@
-package com.external.sample;
+package com.trree.rattattouille;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
