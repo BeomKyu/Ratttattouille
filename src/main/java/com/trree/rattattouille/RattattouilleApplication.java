@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.external.sample", "com.forrrest.common.security"})
+@ComponentScan(basePackages = {"com.trree.rattattouille", "com.forrrest.common.security"})
 public class RattattouilleApplication {
 
 	public static void main(String[] args) {
