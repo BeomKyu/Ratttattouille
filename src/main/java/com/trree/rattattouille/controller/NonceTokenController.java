@@ -1,4 +1,4 @@
-package com.external.sample.controller;
+package com.trree.rattattouille.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.external.sample.dto.response.UserResponse;
-import com.external.sample.service.NonceTokenService;
-import com.external.sample.utils.SecurityUtils;
+import com.trree.rattattouille.dto.response.AuthResponse;
+import com.trree.rattattouille.service.NonceTokenService;
+import com.trree.rattattouille.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -33,10 +33,10 @@ public class NonceTokenController {
 
     @Operation(summary = "논스 토큰 검증", description = "nonce token 검증 및 사용자 처리 api")
     @GetMapping("/validate")
-    public ResponseEntity<UserResponse> tokenValidate() {
+    public ResponseEntity<AuthResponse> tokenValidate() {
         log.info("Security context : {}", SecurityContextHolder.getContext().getAuthentication());
         log.info("Security context : {}", SecurityUtils.getCurrentNonceProfileId());
-        return ResponseEntity.ok(nonceTokenService.validateAndProcessUser());
+        return ResponseEntity.ok(nonceTokenService.validateAndProcessProfile());
     }
 
     @Operation(summary = "test", description = "nonce token 검증 api.")

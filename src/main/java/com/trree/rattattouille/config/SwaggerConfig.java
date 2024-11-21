@@ -1,4 +1,4 @@
-package com.external.sample.config;
+package com.trree.rattattouille.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +21,8 @@ public class SwaggerConfig {
                                         .scheme("bearer")
                                         .bearerFormat("JWT")))
                 .info(new Info()
-                        .title("Sample Service API")
-                        .description("Sample Service API 명세서")
+                        .title("Rattattouille Service API")
+                        .description("Rattattouille Service API 명세서")
                         .version("1.0.0"));
     }
 }

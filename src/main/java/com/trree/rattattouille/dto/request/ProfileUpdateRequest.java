@@ -1,4 +1,4 @@
-package com.external.sample.dto.request;
+package com.trree.rattattouille.dto.request;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserUpdateRequest {
-    private String username;
+public class ProfileUpdateRequest {
+    private String profileName;
     private List<String> roles;
 
     @Builder
-    public UserUpdateRequest(String username, List<String> roles) {
-        this.username = username;
+    public ProfileUpdateRequest(String profileName, List<String> roles) {
+        this.profileName = profileName;
         this.roles = roles;
     }
 }

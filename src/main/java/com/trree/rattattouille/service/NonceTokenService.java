@@ -1,15 +1,21 @@
-package com.external.sample.service;
+package com.trree.rattattouille.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.external.sample.dto.request.UserUpdateRequest;
-import com.external.sample.dto.response.UserResponse;
-import com.external.sample.entity.User;
-import com.external.sample.repository.UserRepository;
-import com.external.sample.utils.SecurityUtils;
+import com.forrrest.common.security.config.TokenProperties;
+import com.forrrest.common.security.token.JwtTokenProvider;
+import com.forrrest.common.security.token.TokenType;
+import com.trree.rattattouille.dto.request.ProfileUpdateRequest;
+import com.trree.rattattouille.dto.response.AuthResponse;
+import com.trree.rattattouille.dto.response.ProfileResponse;
+import com.trree.rattattouille.dto.response.TokenInfo;
+import com.trree.rattattouille.entity.Profile;
+import com.trree.rattattouille.repository.ProfileRepository;
+import com.trree.rattattouille.utils.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NonceTokenService {
     
-    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProperties tokenProperties;
 
     /**
      * 논스 토큰으로부터 사용자 정보를 검증하고 처리
@@ -29,52 +37,69 @@ public class NonceTokenService {
      * 3. 없으면 새로 생성, 있으면 기존 사용자 반환
      */
     @Transactional
-    public UserResponse validateAndProcessUser() {
+    public AuthResponse validateAndProcessProfile() {
         // SecurityContext에서 사용자 정보 추출
-        Long userId = SecurityUtils.getCurrentNonceProfileId();
-        String username = SecurityUtils.getCurrentNonceProfileName();
+        Long profileId = SecurityUtils.getCurrentNonceProfileId();
+        String profileName = SecurityUtils.getCurrentNonceProfileName();
         List<String> roles = SecurityUtils.getCurrentNonceProfileRole();
 
-        log.info("Processing user from nonce token - userId: {}, username: {}", userId, username);
+        log.info("Processing Profile from nonce token - ProfileId: {}, ProfileName: {}", profileId, profileName);
 
-        User user = userRepository.findById(userId)
-            .orElseGet(() -> createNewUser(userId, username, roles));
-        
-        return UserResponse.from(user);
+        Profile profile = profileRepository.findById(profileId)
+            .orElseGet(() -> createNewProfile(profileId, profileName, roles));
+
+        Map<String, Object> profileClaims = Map.of(
+            "username",profile.getProfileName(),
+            "roles", profile.getRoles()
+        );
+
+        String profileAccessToken = jwtTokenProvider.createToken(profile.getId().toString(), TokenType.PROFILE_ACCESS, profileClaims);
+        String profileRefreshToken = jwtTokenProvider.createToken(profile.getId().toString(), TokenType.PROFILE_REFRESH, profileClaims);
+        return AuthResponse.builder()
+            .profileToken(
+                TokenInfo.builder()
+                    .accessToken(profileAccessToken)
+                    .refreshToken(profileRefreshToken)
+                    .tokenType("Bearer")
+                    .expiresIn(tokenProperties.getValidity().get(TokenType.PROFILE_ACCESS))
+                    .build()
+            )
+            .profileResponse(ProfileResponse.from(profile))
+            .build();
     }
 
     /**
      * 새로운 사용자 생성
      */
-    private User createNewUser(Long userId, String username, List<String> roles) {
-        log.info("Creating new user - userId: {}", userId);
-        
-        User newUser = User.builder()
-            .id(userId)
-            .username(username)
+    private Profile createNewProfile(Long profileId, String profileName, List<String> roles) {
+        log.info("Creating new Profile - ProfileId: {}", profileId);
+
+        Profile newProfile = Profile.builder()
+            .id(profileId)
+            .profileName(profileName)
             .roles(roles)
             .build();
             
-        return userRepository.save(newUser);
+        return profileRepository.save(newProfile);
     }
 
     /**
      * 사용자 정보 업데이트 (필요한 경우 추가)
      */
     @Transactional
-    public UserResponse updateUser(Long userId, UserUpdateRequest request) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found - id: " + userId));
+    public ProfileResponse updateProfile(Long profileId, ProfileUpdateRequest request) {
+        Profile profile = profileRepository.findById(profileId)
+            .orElseThrow(() -> new IllegalArgumentException("profile not found - id: " + profileId));
 
         // 업데이트 로직 구현 (엔티티에 수정 메서드 추가 필요)
         
-        return UserResponse.from(user);
+        return ProfileResponse.from(profile);
     }
 
     /**
      * 사용자 존재 여부 확인
      */
-    public boolean existsUser(Long userId) {
-        return userRepository.existsById(userId);
+    public boolean existsProfile(Long profileId) {
+        return profileRepository.existsById(profileId);
     }
 }

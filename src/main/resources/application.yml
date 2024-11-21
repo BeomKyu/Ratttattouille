@@ -16,7 +16,7 @@ springdoc:
   default-produces-media-type: application/json
 
 token:
-  secret: ${TOKEN_SECRET:c2VjcmV0a2V5Zm9yZGV2ZW52aXJvbm1lbnRzZWNyZXRrZXlmb3JkZXZlbnZpcm9ubWVudA==}
+  secret: ${TOKEN_SECRET:YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5eg==}
   validity:
     USER_ACCESS: 3600000        # 1시간
     USER_REFRESH: 604800000     # 7일

@@ -1,4 +1,4 @@
-package com.external.sample.entity;
+package com.trree.rattattouille.entity;
 
 import java.util.List;
 
@@ -15,20 +15,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseTimeEntity {
+public class Profile extends BaseTimeEntity {
     @Id
     private Long id;
     
-    private String username;
+    private String profileName;
     
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles")
+    @CollectionTable(name = "profile_roles")
     private List<String> roles;
     
     @Builder
-    public User(Long id, String username, List<String> roles) {
+    public Profile(Long id, String profileName, List<String> roles) {
         this.id = id;
-        this.username = username;
+        this.profileName = profileName;
         this.roles = roles;
     }
 }

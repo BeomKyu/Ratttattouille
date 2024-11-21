@@ -1,4 +1,4 @@
-package com.external.sample;
+package com.trree.rattattouille;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.external.sample", "com.forrrest.common.security"})
-public class SampleApplication {
+public class RattattouilleApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SampleApplication.class, args);
+		SpringApplication.run(RattattouilleApplication.class, args);
 	}
 
 }

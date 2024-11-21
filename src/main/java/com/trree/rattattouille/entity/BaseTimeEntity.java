@@ -1,4 +1,4 @@
-package com.external.sample.entity;
+package com.trree.rattattouille.entity;
 
 import java.time.LocalDateTime;
 

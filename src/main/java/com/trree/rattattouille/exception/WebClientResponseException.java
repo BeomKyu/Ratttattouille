@@ -1,4 +1,4 @@
-package com.external.sample.exception;
+package com.trree.rattattouille.exception;
 
 import lombok.Getter;
 

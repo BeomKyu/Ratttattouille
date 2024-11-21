@@ -1,4 +1,4 @@
-package com.external.sample.config;
+package com.trree.rattattouille.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.external.sample.security.NonceTokenAuthenticationFilter;
+import com.forrrest.common.security.filter.UserTokenFilter;
+import com.trree.rattattouille.security.NonceTokenAuthenticationFilter;
 import com.forrrest.common.security.filter.ExternalNonceTokenFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,8 @@ public class SecurityConfig {
 
     private final NonceTokenAuthenticationFilter nonceTokenAuthenticationFilter;
 
+    // private final UserTokenFilter userTokenFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -35,8 +38,8 @@ public class SecurityConfig {
                 .requestMatchers("/nonce-tokens/**").hasRole("PROFILE")
                 .anyRequest().denyAll()
             )
-            .addFilterBefore(nonceTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(externalNonceTokenFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(externalNonceTokenFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(nonceTokenAuthenticationFilter, ExternalNonceTokenFilter.class);
         
         return http.build();
     }

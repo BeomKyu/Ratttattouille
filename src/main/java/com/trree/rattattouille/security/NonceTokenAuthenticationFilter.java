@@ -1,4 +1,4 @@
-package com.external.sample.security;
+package com.trree.rattattouille.security;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.external.sample.exception.WebClientResponseException;
+import com.trree.rattattouille.exception.WebClientResponseException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
