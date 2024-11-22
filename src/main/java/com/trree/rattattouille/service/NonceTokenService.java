@@ -1,5 +1,6 @@
 package com.trree.rattattouille.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,9 @@ import com.trree.rattattouille.dto.response.AuthResponse;
 import com.trree.rattattouille.dto.response.ProfileResponse;
 import com.trree.rattattouille.dto.response.TokenInfo;
 import com.trree.rattattouille.entity.Profile;
+import com.trree.rattattouille.entity.RefreshToken;
 import com.trree.rattattouille.repository.ProfileRepository;
+import com.trree.rattattouille.repository.RefreshTokenRepository;
 import com.trree.rattattouille.utils.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NonceTokenService {
     
     private final ProfileRepository profileRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenProperties tokenProperties;
 
@@ -55,6 +59,10 @@ public class NonceTokenService {
 
         String profileAccessToken = jwtTokenProvider.createToken(profile.getId().toString(), TokenType.PROFILE_ACCESS, profileClaims);
         String profileRefreshToken = jwtTokenProvider.createToken(profile.getId().toString(), TokenType.PROFILE_REFRESH, profileClaims);
+
+        refreshTokenRepository.save(
+            new RefreshToken(profile.getId().toString(), profileRefreshToken, LocalDateTime.now()));
+
         return AuthResponse.builder()
             .profileToken(
                 TokenInfo.builder()
