@@ -21,6 +21,7 @@ import com.trree.rattattouille.entity.RefreshToken;
 import com.trree.rattattouille.exception.CustomException;
 import com.trree.rattattouille.exception.ErrorCode;
 import com.trree.rattattouille.repository.RefreshTokenRepository;
+import com.trree.rattattouille.utils.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,5 +83,11 @@ public class ProfileAuthService {
             )
             .profileResponse(ProfileResponse.from(profile))
             .build();
+    }
+
+    @Transactional
+    public void getProfileInfoTest() {
+        log.info("profile authService profile Id : {}", SecurityUtils.getCurrentProfileId());
+        log.info("profile authService profile Name : {}", SecurityUtils.getCurrentProfileName());
     }
 }

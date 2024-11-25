@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trree.rattattouille.dto.request.TestRequest;
 import com.trree.rattattouille.dto.request.TokenRequest;
 import com.trree.rattattouille.dto.response.AuthResponse;
 import com.trree.rattattouille.service.ProfileAuthService;
+import com.trree.rattattouille.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,11 @@ public class ProfileTokenController {
 
     @Operation(summary = "profile controller test", description = "test")
     @PostMapping("/test")
-    public ResponseEntity<Boolean> test(@Valid @RequestBody TestRequest testRequest) {
-        log.info("profile controller test : {}", testRequest);
+    @SecurityRequirement(name = "bearer-token")
+    public ResponseEntity<Boolean> getProfileInfoTest() {
+        log.info("profile controller profile Id : {}", SecurityUtils.getCurrentProfileId());
+        log.info("profile controller profile Name : {}", SecurityUtils.getCurrentProfileName());
+        profileAuthService.getProfileInfoTest();
         return ResponseEntity.ok(true);
     }
 }

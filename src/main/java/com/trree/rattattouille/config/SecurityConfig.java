@@ -9,7 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.forrrest.common.security.filter.UserTokenFilter;
+import com.forrrest.common.security.filter.ProfileTokenFilter;
 import com.trree.rattattouille.security.NonceTokenAuthenticationFilter;
 import com.forrrest.common.security.filter.ExternalNonceTokenFilter;
 
@@ -24,7 +24,7 @@ public class SecurityConfig {
 
     private final NonceTokenAuthenticationFilter nonceTokenAuthenticationFilter;
 
-    // private final UserTokenFilter userTokenFilter;
+    private final ProfileTokenFilter profileTokenFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,10 +37,12 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/nonce-tokens/**").hasRole("PROFILE")
                 .requestMatchers("/profile-tokens/**").permitAll()
+                .requestMatchers("/profile-tokens/test").hasRole("PROFILE")
                 .anyRequest().denyAll()
             )
             .addFilterBefore(externalNonceTokenFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(nonceTokenAuthenticationFilter, ExternalNonceTokenFilter.class);
+            .addFilterBefore(nonceTokenAuthenticationFilter, ExternalNonceTokenFilter.class)
+            .addFilterBefore(profileTokenFilter, NonceTokenAuthenticationFilter.class);
         
         return http.build();
     }
