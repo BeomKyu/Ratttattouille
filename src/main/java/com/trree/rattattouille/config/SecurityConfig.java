@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/nonce-tokens/**").hasRole("PROFILE")
-                .requestMatchers("/profile-tokens/**").permitAll()
+                .requestMatchers("/profile-tokens/refresh").permitAll()
                 .requestMatchers("/profile-tokens/test").hasRole("PROFILE")
                 .anyRequest().denyAll()
             )
