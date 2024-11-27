@@ -38,11 +38,12 @@ public class SecurityConfig {
                 .requestMatchers("/nonce-tokens/**").hasRole("PROFILE")
                 .requestMatchers("/profile-tokens/refresh").permitAll()
                 .requestMatchers("/profile-tokens/test").hasRole("PROFILE")
+                .requestMatchers("/app").permitAll()
                 .anyRequest().denyAll()
             )
-            .addFilterBefore(externalNonceTokenFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(nonceTokenAuthenticationFilter, ExternalNonceTokenFilter.class)
-            .addFilterBefore(profileTokenFilter, NonceTokenAuthenticationFilter.class);
+            .addFilterBefore(nonceTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(externalNonceTokenFilter, NonceTokenAuthenticationFilter.class)
+            .addFilterBefore(profileTokenFilter, ExternalNonceTokenFilter.class);
         
         return http.build();
     }

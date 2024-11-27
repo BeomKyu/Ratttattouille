@@ -5,6 +5,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.trree.rattattouille.exception.WebClientResponseException;
+import com.trree.rattattouille.service.AppService;
+import com.trree.rattattouille.utils.SecurityUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,9 +32,14 @@ public class NonceTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final WebClient webClient;
 
-    public NonceTokenAuthenticationFilter(@Value("${security.token.external-nonce-paths}")String[] pathPatterns, WebClient webClient) {
+    private final AppService appService;
+
+    private final Logger logger = LoggerFactory.getLogger(NonceTokenAuthenticationFilter.class);
+
+    public NonceTokenAuthenticationFilter(@Value("${security.token.external-nonce-paths}")String[] pathPatterns, WebClient webClient, AppService appService) {
         this.pathPatterns = pathPatterns;
         this.webClient = webClient;
+        this.appService = appService;
     }
 
     @Override
@@ -38,6 +47,8 @@ public class NonceTokenAuthenticationFilter extends OncePerRequestFilter {
                                   HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
+        String clientSecret = appService.getClientSecretByClientId(SecurityUtils.getCurrentClientId());
+        log.info("NonceTokenAuthenticationFilter clientSecret : {}", clientSecret);
         if (token == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "토큰이 없습니다.");
             return;
@@ -46,7 +57,7 @@ public class NonceTokenAuthenticationFilter extends OncePerRequestFilter {
             webClient.post()
                 .uri("/nonce-tokens/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Map.of("token", token))
+                .bodyValue(Map.of("token", token, "clientSecret", clientSecret))
                 .retrieve()
                 .toBodilessEntity()  // 응답 바디 없이 상태 코드만 확인
                 .block(Duration.ofSeconds(3));

@@ -39,6 +39,12 @@ public class SecurityUtils {
         return userDetails.getRoles();
     }
 
+    public static String getCurrentClientId() {
+        NonceTokenAuthentication authentication = (NonceTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getClientId();
+    }
+
     // public static void validateAppOwnership(App app) {
     //     Long currentProfileId = getCurrentProfileId();
     //     if (!app.getProfileId().equals(currentProfileId)) {

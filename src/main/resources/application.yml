@@ -27,7 +27,7 @@ token:
 security:
   token:
     user-paths: #/users, /profiles
-    profile-paths: /profile-tokens/test
+    profile-paths: /profile-tokens/test #, /app
     nonce-paths: #/nonce-tokens
     external-nonce-paths: /nonce-tokens
 

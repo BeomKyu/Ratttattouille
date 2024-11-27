@@ -34,7 +34,10 @@ public enum ErrorCode {
     PROFILE_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "P005", "Profile Token is Expired"),
 
     // http
-    HTTP_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "H001", "HTTP Request Error");
+    HTTP_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "H001", "HTTP Request Error"),
+
+    //  App
+    APP_NOT_FOUND(HttpStatus.NOT_FOUND, "A001", "App Not Found");
 
 
 
