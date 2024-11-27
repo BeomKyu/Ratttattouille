@@ -38,10 +38,10 @@ out/
 
 
 ### application.yml ###
-application-local.yml
+#application-local.yml
 
 ### env ###
 .env
 
 ### docker-compose  ###
-docker-compose.yml
+#docker-compose.yml

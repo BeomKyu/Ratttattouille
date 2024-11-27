@@ -23,11 +23,11 @@ token:
     PROFILE_ACCESS: 3600000     # 1시간
     PROFILE_REFRESH: 604800000  # 7일
     NONCE: 300000              # 5분
-
+# 필터를 거치고 싶은 경로만 추가, 추가 안한 나머지 경로 필터 검사 x 그냥 통과
 security:
   token:
     user-paths: #/users, /profiles
-    profile-paths: /profile-tokens/test #, /app
+    profile-paths: /profile-tokens/test
     nonce-paths: #/nonce-tokens
     external-nonce-paths: /nonce-tokens
 

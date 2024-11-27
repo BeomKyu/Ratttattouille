@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.trree.rattattouille.dto.request.AppRequest;
-import com.trree.rattattouille.entity.App;
+import com.trree.rattattouille.dto.response.AppResponse;
 import com.trree.rattattouille.service.AppService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/app")
 @RequiredArgsConstructor
-// @SecurityRequirement(name = "bearer-token")
 @Slf4j
 public class AppController {
 
@@ -35,9 +34,9 @@ public class AppController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "앱 return", description = "app 정보 생성")
+    @Operation(summary = "앱 정보 조회", description = "app 정보 생성")
     @GetMapping("")
-    public ResponseEntity<App> readApp(@RequestParam String clientId) {
+    public ResponseEntity<AppResponse> readApp(@RequestParam String clientId) {
         return ResponseEntity.ok(appService.getApp(clientId));
     }
 }

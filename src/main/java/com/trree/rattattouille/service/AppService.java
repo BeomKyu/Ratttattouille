@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.trree.rattattouille.dto.request.AppRequest;
+import com.trree.rattattouille.dto.response.AppResponse;
 import com.trree.rattattouille.entity.App;
 import com.trree.rattattouille.exception.CustomException;
 import com.trree.rattattouille.exception.ErrorCode;
@@ -41,7 +42,8 @@ public class AppService {
         );
     }
 
-    public App getApp(String clientId) {
-        return appRepository.findByClientId(clientId).orElseThrow();
+    public AppResponse getApp(String clientId) {
+        return AppResponse.from(appRepository.findByClientId(clientId)
+            .orElseThrow(() -> new CustomException(ErrorCode.APP_NOT_FOUND)));
     }
 }

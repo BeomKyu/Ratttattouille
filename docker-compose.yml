@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ratta-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: local_ratta_db
+      MYSQL_USER: local_ratta_user
+      MYSQL_PASSWORD: local_ratta_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/ratta/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - ratta-network
+
+volumes:
+  mysql_data:
+    name: ratta-mysql-data
+
+networks:
+  ratta-network:
+    name: ratta-network
