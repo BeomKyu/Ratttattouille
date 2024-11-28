@@ -1,7 +1,6 @@
 package com.trree.rattattouille.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -55,7 +54,7 @@ public class ProfileAuthService {
 
         Map<String, Object> profileClaims = Map.of(
             "username", profile.getProfileName(),
-            "roles", List.of("PROFILE")
+            "roles", profile.getRoles()
         );
 
         String profileAccessToken = jwtTokenProvider.createToken(

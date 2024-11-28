@@ -27,15 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NonceTokenController {
 
-    private final Logger logger = LoggerFactory.getLogger(NonceTokenController.class);
-
     private final NonceTokenService nonceTokenService;
 
     @Operation(summary = "논스 토큰 검증", description = "nonce token 검증 및 사용자 처리 api")
     @GetMapping("/validate")
     public ResponseEntity<AuthResponse> tokenValidate() {
-        log.info("Security context : {}", SecurityContextHolder.getContext().getAuthentication());
-        log.info("Security context : {}", SecurityUtils.getCurrentNonceProfileId());
         return ResponseEntity.ok(nonceTokenService.validateAndProcessProfile());
     }
 
@@ -43,6 +39,7 @@ public class NonceTokenController {
     @PostMapping("/test")
     public ResponseEntity<Boolean> test() {
         log.info("test SecurityContextHolder.getContext().getAuthentication() : {}", System.identityHashCode(SecurityContextHolder.getContext()));
+        log.info("test profile roles : {}", SecurityUtils.getCurrentNonceProfileRole());
         return ResponseEntity.ok(true);
     }
 
