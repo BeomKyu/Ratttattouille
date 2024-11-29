@@ -24,8 +24,11 @@ logging:
    org.hibernate.type: trace
 
 server:
-  port: ${SAMPLE_PORT:8081}
+  port: ${SAMPLE_PORT:8080}
 
 security:
   token:
     app-management-server-paths: ${app_management_server_paths:http://localhost:8082}
+
+    #http:://222.233.6.72:17172
+    #http://localhost:8082
